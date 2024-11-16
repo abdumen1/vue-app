@@ -91,6 +91,47 @@
                         </p>
                     </div>
                 </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div 
+                        v-for="lesson in sortedLessons"
+                        class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <i :class="lesson.icon" class="text-3xl text-blue-600"></i>
+                                <span 
+                                    :class="['px-3 py-1 rounded-full text-sm', 
+                                        lesson.spaces > 3 ? 'bg-green-100 text-green-800' : 
+                                        lesson.spaces > 0 ? 'bg-yellow-100 text-yellow-800' : 
+                                        'bg-red-100 text-red-800']">
+                                    {{lesson.spaces}} spaces left
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold mb-2">{{lesson.subject}}</h3>
+                            <div class="space-y-2 text-gray-600">
+                                <p>
+                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                    {{lesson.location}}
+                                </p>
+                                <p>
+                                    <i class="fas fa-clock mr-2"></i>
+                                    {{lesson.time}}
+                                </p>
+                                <p>
+                                    <i class="fas fa-dollar-sign mr-2"></i>
+                                    {{lesson.price}}
+                                </p>
+                            </div>
+                            <button 
+                                @click="addToCart(lesson)"
+                                :disabled="lesson.spaces === 0"
+                                class="mt-4 w-full bg-blue-600 text-white px-4 py-2 rounded disabled:bg-gray-400 disabled:cursor-not-allowed">
+                                {{lesson.spaces === 0 ? 'Sold Out' : 'Add to Cart'}}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 </body>
