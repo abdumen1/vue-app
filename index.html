@@ -277,5 +277,21 @@
                     return this.cartItems.reduce((total, item) => total + item.price, 0);
                 }
             },
+            methods: {
+                toggleCart() {
+                    this.showCart = !this.showCart;
+                },
+                async fetchAllLessons() {
+                    try {
+                        const response = await fetch('http://localhost:3000/api/lessons');
+                        if (response.ok) {
+                            this.lessons = await response.json();
+                        } else {
+                            console.error('Failed to fetch lessons:', response.statusText);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching lessons:', error);
+                    }
+                },
     </script>
 </body>
