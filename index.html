@@ -220,4 +220,40 @@
             </div>
         </main>
     </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                selectedSubject: '',
+                sortAttribute: 'subject',
+                sortOrder: 'asc',
+                showCart: false,
+                searchQuery: '',
+                cartItems: [],
+                lessons: [],
+                customerName: '',
+                customerPhone: '',
+                nameError: false,
+                phoneError: false,
+                isCheckoutValid: false
+            },
+             computed: {
+                sortedLessons() {
+                    let filteredLessons = this.lessons;
+
+                    if (this.searchQuery) {
+                        const query = this.searchQuery.toLowerCase();
+                        filteredLessons = this.lessons.filter(lesson => {
+                            return (
+                                lesson.subject.toLowerCase().includes(query) ||
+                                lesson.location.toLowerCase().includes(query) ||
+                                lesson.price.toString().includes(query) ||
+                                lesson.spaces.toString().includes(query) ||
+                                lesson.time.toLowerCase().includes(query)
+                            );
+                        });
+                    }
+                
+    </script>
 </body>
