@@ -309,5 +309,23 @@
                         }
                     }
                 },
+                validateName() {
+                    const nameRegex = /^[A-Za-z\s]+$/;
+                    this.nameError = !nameRegex.test(this.customerName);
+                    this.updateCheckoutValidity();
+                },
+                validatePhone() {
+                    const phoneRegex = /^[0-9]+$/;
+                    this.phoneError = !phoneRegex.test(this.customerPhone);
+                    this.updateCheckoutValidity();
+                },
+                updateCheckoutValidity() {
+                    this.isCheckoutValid = 
+                        this.customerName.length > 0 && 
+                        this.customerPhone.length > 0 && 
+                        !this.nameError && 
+                        !this.phoneError &&
+                        this.cartItems.length > 0;
+                },
     </script>
 </body>
