@@ -237,7 +237,8 @@
                 customerPhone: '',
                 nameError: false,
                 phoneError: false,
-                isCheckoutValid: false
+                isCheckoutValid: false,
+                baseURL: 'https://express-app-1-fd0a.onrender.com'
             },
             computed: {
                 sortedLessons() {
@@ -284,7 +285,7 @@
                 },
                 async fetchAllLessons() {
                     try {
-                        const response = await fetch('http://localhost:3000/api/lessons');
+                        const response = await fetch(`${this.baseURL}/api/lessons`);
                         if (response.ok) {
                             this.lessons = await response.json();
                         } else {
@@ -360,7 +361,7 @@
 },
                                 async saveOrder(orderData) {
                     try {
-                        const response = await fetch('http://localhost:3000/api/orders', {
+                        const response = await fetch(`${this.baseURL}/api/orders`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -385,7 +386,7 @@
         
         console.log('Updating lesson with ID:', cleanLessonId); // Debug log
         
-        const response = await fetch(`http://localhost:3000/api/lessons/${cleanLessonId}`, {
+        const response = await fetch(`${this.baseURL}/api/lessons/${cleanLessonId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
