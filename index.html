@@ -344,5 +344,30 @@
         })),
         total: this.cartTotal
     };
+
+    try {
+        await this.saveOrder(orderData);
+        
+        // Add debug logging
+        console.log('Cart Items:', this.cartItems);
+        
+        for (const item of this.cartItems) {
+            console.log('Updating lesson:', item); // Debug log
+            await this.updateLessonSpaces(
+                item._id,  // Changed from item.id to item._id
+                item.spaces - 1
+            );
+        }
+        
+        alert(`Thank you ${this.customerName}! Your order has been submitted successfully.\nTotal: $${this.cartTotal}`);
+        this.cartItems = [];
+        this.customerName = '';
+        this.customerPhone = '';
+        this.showCart = false;
+    } catch (error) {
+        console.error('Error during checkout:', error);
+        alert('There was an error processing your order. Please try again.');
+    }
+},
     </script>
 </body>
