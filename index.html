@@ -332,31 +332,19 @@
     if (!this.isCheckoutValid) return;
 
     const orderData = {
-        customer: {
-            name: this.customerName,
-            phone: this.customerPhone
-        },
-        items: this.cartItems.map(item => ({
-            lessonId: item._id,  // Changed from item.id to item._id
-            subject: item.subject,
-            price: item.price,
-            location: item.location,
-            time: item.time
-        })),
-        total: this.cartTotal
+        name: this.customerName,
+        phoneNumber: this.customerPhone,
+        lessonIds: this.cartItems.map(item => item._id),
+        spaces: this.cartItems.length
     };
 
     try {
         await this.saveOrder(orderData);
         
-        // Add debug logging
-        console.log('Cart Items:', this.cartItems);
-        
         for (const item of this.cartItems) {
-            console.log('Updating lesson:', item); // Debug log
             await this.updateLessonSpaces(
-                item._id,  // Changed from item.id to item._id
-                item.spaces - 1
+                item._id,
+                item.spaces
             );
         }
         
@@ -370,7 +358,7 @@
         alert('There was an error processing your order. Please try again.');
     }
 },
-                async saveOrder(orderData) {
+                                async saveOrder(orderData) {
                     try {
                         const response = await fetch('http://localhost:3000/api/orders', {
                             method: 'POST',
