@@ -369,5 +369,55 @@
         alert('There was an error processing your order. Please try again.');
     }
 },
+async saveOrder(orderData) {
+                    try {
+                        const response = await fetch('http://localhost:3000/api/orders', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(orderData)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Failed to save order');
+                        }
+
+                        return await response.json();
+                    } catch (error) {
+                        console.error('Error saving order:', error);
+                        throw error;
+                    }
+                },
+                async updateLessonSpaces(lessonId, spaces) {
+    try {
+        // Remove any quotes and extract just the hex string if it's an ObjectId
+        const cleanLessonId = lessonId.toString().replace(/ObjectId\(['"](.+)['"]\)/, '$1');
+        
+        console.log('Updating lesson with ID:', cleanLessonId); // Debug log
+        
+        const response = await fetch(`http://localhost:3000/api/lessons/${cleanLessonId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ spaces: parseInt(spaces) })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update lesson spaces');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating lesson spaces:', error);
+        throw error;
+    }
+}
+            },
+            created() {
+                this.fetchAllLessons();
+            }
+        });
     </script>
 </body>
