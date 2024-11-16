@@ -255,5 +255,27 @@
                         });
                     }
                 
+                    return filteredLessons.sort((a, b) => {
+                        let comparison = 0;
+
+                        switch(this.sortAttribute) {
+                            case 'subject':
+                            case 'location':
+                                comparison = a[this.sortAttribute].localeCompare(b[this.sortAttribute]);
+                                break;
+
+                            case 'price':
+                            case 'spaces':
+                                comparison = a[this.sortAttribute] - b[this.sortAttribute];
+                                break;
+                        }
+
+                        return this.sortOrder === 'asc' ? comparison : -comparison;
+                    });
+                },
+                cartTotal() {
+                    return this.cartItems.reduce((total, item) => total + item.price, 0);
+                }
+            },
     </script>
 </body>
