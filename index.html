@@ -327,5 +327,22 @@
                         !this.phoneError &&
                         this.cartItems.length > 0;
                 },
+                async checkout() {
+    if (!this.isCheckoutValid) return;
+
+    const orderData = {
+        customer: {
+            name: this.customerName,
+            phone: this.customerPhone
+        },
+        items: this.cartItems.map(item => ({
+            lessonId: item._id,  // Changed from item.id to item._id
+            subject: item.subject,
+            price: item.price,
+            location: item.location,
+            time: item.time
+        })),
+        total: this.cartTotal
+    };
     </script>
 </body>
