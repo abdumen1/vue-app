@@ -284,17 +284,20 @@
                     this.showCart = !this.showCart;
                 },
                 async fetchAllLessons() {
-                    try {
-                        const response = await fetch(`${this.baseURL}/api/lessons`);
-                        if (response.ok) {
-                            this.lessons = await response.json();
-                        } else {
-                            console.error('Failed to fetch lessons:', response.statusText);
-                        }
-                    } catch (error) {
-                        console.error('Error fetching lessons:', error);
-                    }
-                },
+    try {
+        const response = await fetch(`${this.baseURL}/api/lessons`);
+        if (response.ok) {
+            const lessons = await response.json();
+            console.log('Fetched lessons:', lessons); // Add this line
+            this.lessons = lessons;
+        } else {
+            const errorText = await response.text();
+            console.error('Failed to fetch lessons:', errorText);
+        }
+    } catch (error) {
+        console.error('Error fetching lessons:', error);
+    }
+},
                 addToCart(lesson) {
                     if (lesson.spaces > 0) {
                         this.cartItems.push({...lesson});
@@ -342,12 +345,20 @@
     try {
         await this.saveOrder(orderData);
         
+        // Update each lesson's spaces
         for (const item of this.cartItems) {
-            await this.updateLessonSpaces(
-                item._id,
-                item.spaces
-            );
+            const lessonToUpdate = this.lessons.find(l => l._id === item._id);
+            if (lessonToUpdate) {
+                console.log('Current spaces before update:', lessonToUpdate.spaces); // Debug log
+                await this.updateLessonSpaces(
+                    item._id,
+                    lessonToUpdate.spaces // Use the current spaces from the lesson
+                );
+            }
         }
+        
+        // Refresh the lessons data after successful checkout
+        await this.fetchAllLessons(); // Add this line
         
         alert(`Thank you ${this.customerName}! Your order has been submitted successfully.\nTotal: $${this.cartTotal}`);
         this.cartItems = [];
@@ -379,12 +390,12 @@
                         throw error;
                     }
                 },
-                async updateLessonSpaces(lessonId, spaces) {
+              // Modify updateLessonSpaces to add more debug logging
+async updateLessonSpaces(lessonId, spaces) {
     try {
-        // Remove any quotes and extract just the hex string if it's an ObjectId
         const cleanLessonId = lessonId.toString().replace(/ObjectId\(['"](.+)['"]\)/, '$1');
-        
-        console.log('Updating lesson with ID:', cleanLessonId); // Debug log
+        console.log('Updating lesson with ID:', cleanLessonId);
+        console.log('New spaces value:', spaces); // Add this line
         
         const response = await fetch(`${this.baseURL}/api/lessons/${cleanLessonId}`, {
             method: 'PUT',
@@ -395,10 +406,14 @@
         });
 
         if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Server response:', errorText); // Add this line
             throw new Error('Failed to update lesson spaces');
         }
 
-        return await response.json();
+        const updatedLesson = await response.json();
+        console.log('Updated lesson response:', updatedLesson); // Add this line
+        return updatedLesson;
     } catch (error) {
         console.error('Error updating lesson spaces:', error);
         throw error;
